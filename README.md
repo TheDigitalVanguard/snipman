@@ -1,5 +1,7 @@
 # Snipman CLI
 
+https://www.npmjs.com/package/snipman
+
 Snipman is a simple command-line tool for managing code snippets efficiently. It allows users to store, retrieve, and manage snippets in an organized way using folders and names.
 
 ## Features
