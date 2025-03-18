@@ -6,13 +6,24 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import { handleData, readData, deleteAll, saveData } from "./io.js";
 import { SnippetProps } from "./types.js";
+import { wrapText } from "./utils.js";
+
+const MAX_FOLDER_STRING_SIZE = 20;
+const MAX_NAME_STRING_SIZE = 20;
+const MAX_SNIPPET_STRING_SIZE = 60;
 
 const program = new Command();
 const table = new Table({
+  style: { border: [] },
   head: ["Folder", "Name", "Snippet"],
-  colWidths: [20, 20, 60],
-  wordWrap: true,
 });
+
+const pushToTable = (folder: string, name: string, snippet: string) => {
+  const wrappedFolder = wrapText(folder, MAX_FOLDER_STRING_SIZE).join("\n");
+  const wrappedName = wrapText(name, MAX_NAME_STRING_SIZE).join("\n");
+  const wrappedSnippet = wrapText(snippet, MAX_SNIPPET_STRING_SIZE).join("\n");
+  table.push([wrappedFolder, wrappedName, wrappedSnippet]);
+};
 
 program.version("1.0.0");
 
@@ -65,14 +76,14 @@ program
       if (name && parsed[folder][name]) {
         // Both folder and name exist, push directly
         parsed[folder][name].forEach((snippet) => {
-          table.push([folder, name, snippet]);
+          pushToTable(folder, name, snippet);
         });
       } else {
         // Only folder exists, iterate through names in folder
         Object.entries(parsed[folder]).forEach(([nameKey, snippetArr]) => {
-          snippetArr.forEach((snippet) =>
-            table.push([folder, nameKey, snippet])
-          );
+          snippetArr.forEach((snippet) => {
+            pushToTable(folder, nameKey, snippet);
+          });
         });
       }
     } else {
@@ -81,7 +92,7 @@ program
         Object.entries(snippets).forEach(([nameKey, snippetArr]) => {
           snippetArr.forEach((snippet) => {
             if (!name || nameKey === name) {
-              table.push([folderKey, nameKey, snippet]);
+              pushToTable(folderKey, nameKey, snippet);
             }
           });
         });

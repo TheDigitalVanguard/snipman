@@ -18,12 +18,21 @@ const cli_table3_1 = __importDefault(require("cli-table3"));
 const inquirer_1 = __importDefault(require("inquirer"));
 const chalk_1 = __importDefault(require("chalk"));
 const io_js_1 = require("./io.js");
+const utils_js_1 = require("./utils.js");
+const MAX_FOLDER_STRING_SIZE = 20;
+const MAX_NAME_STRING_SIZE = 20;
+const MAX_SNIPPET_STRING_SIZE = 60;
 const program = new commander_1.Command();
 const table = new cli_table3_1.default({
+    style: { border: [] },
     head: ["Folder", "Name", "Snippet"],
-    colWidths: [20, 20, 60],
-    wordWrap: true,
 });
+const pushToTable = (folder, name, snippet) => {
+    const wrappedFolder = (0, utils_js_1.wrapText)(folder, MAX_FOLDER_STRING_SIZE).join("\n");
+    const wrappedName = (0, utils_js_1.wrapText)(name, MAX_NAME_STRING_SIZE).join("\n");
+    const wrappedSnippet = (0, utils_js_1.wrapText)(snippet, MAX_SNIPPET_STRING_SIZE).join("\n");
+    table.push([wrappedFolder, wrappedName, wrappedSnippet]);
+};
 program.version("1.0.0");
 // Greet command
 program
@@ -69,13 +78,15 @@ program
         if (name && parsed[folder][name]) {
             // Both folder and name exist, push directly
             parsed[folder][name].forEach((snippet) => {
-                table.push([folder, name, snippet]);
+                pushToTable(folder, name, snippet);
             });
         }
         else {
             // Only folder exists, iterate through names in folder
             Object.entries(parsed[folder]).forEach(([nameKey, snippetArr]) => {
-                snippetArr.forEach((snippet) => table.push([folder, nameKey, snippet]));
+                snippetArr.forEach((snippet) => {
+                    pushToTable(folder, nameKey, snippet);
+                });
             });
         }
     }
@@ -85,7 +96,7 @@ program
             Object.entries(snippets).forEach(([nameKey, snippetArr]) => {
                 snippetArr.forEach((snippet) => {
                     if (!name || nameKey === name) {
-                        table.push([folderKey, nameKey, snippet]);
+                        pushToTable(folderKey, nameKey, snippet);
                     }
                 });
             });
