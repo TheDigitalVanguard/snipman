@@ -21,7 +21,8 @@ const io_js_1 = require("./io.js");
 const program = new commander_1.Command();
 const table = new cli_table3_1.default({
     head: ["Folder", "Name", "Snippet"],
-    colWidths: [20, 20, 40],
+    colWidths: [20, 20, 60],
+    wordWrap: true,
 });
 program.version("1.0.0");
 // Greet command

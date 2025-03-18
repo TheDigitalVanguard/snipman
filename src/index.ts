@@ -10,7 +10,8 @@ import { SnippetProps } from "./types.js";
 const program = new Command();
 const table = new Table({
   head: ["Folder", "Name", "Snippet"],
-  colWidths: [20, 20, 40],
+  colWidths: [20, 20, 60],
+  wordWrap: true,
 });
 
 program.version("1.0.0");
