@@ -52,31 +52,6 @@ snipman rm -f folder  # Delete a specific folder
 snipman rm -n name    # Delete a specific snippet
 ```
 
-## Installation & Setup
-
-1. Clone the repository:
-   ```sh
-   git clone <repository-url>
-   cd snipman
-   ```
-2. Install dependencies:
-   ```sh
-   npm install
-   ```
-3. Build the project:
-   ```sh
-   npm run build
-   ```
-4. Grant execute permissions to the CLI script:
-   ```sh
-   chmod +x dist/index.js
-   ```
-5. Link the CLI tool globally:
-   ```sh
-   npm link
-   ```
-6. Now you can use `snipman` from anywhere in your terminal!
-
 ## Usage
 
 Run `snipman --help` to see available commands.
