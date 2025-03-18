@@ -58,15 +58,34 @@ program
     if (!data) return console.log(chalk.bgRed("No snippets found."));
 
     const parsed: SnippetProps = JSON.parse(data);
-    Object.entries(parsed).forEach(([folderKey, snippets]) => {
-      Object.entries(snippets).forEach(([nameKey, snippetArr]) => {
-        snippetArr.forEach((snippet) => {
-          if ((folder && folderKey !== folder) || (name && nameKey !== name))
-            return;
-          table.push([folderKey, nameKey, snippet]);
+
+    if (folder && parsed[folder]) {
+      // Folder exists, filter within it
+      if (name && parsed[folder][name]) {
+        // Both folder and name exist, push directly
+        parsed[folder][name].forEach((snippet) => {
+          table.push([folder, name, snippet]);
+        });
+      } else {
+        // Only folder exists, iterate through names in folder
+        Object.entries(parsed[folder]).forEach(([nameKey, snippetArr]) => {
+          snippetArr.forEach((snippet) =>
+            table.push([folder, nameKey, snippet])
+          );
+        });
+      }
+    } else {
+      // No folder filter, iterate normally (O(n * m * k))
+      Object.entries(parsed).forEach(([folderKey, snippets]) => {
+        Object.entries(snippets).forEach(([nameKey, snippetArr]) => {
+          snippetArr.forEach((snippet) => {
+            if (!name || nameKey === name) {
+              table.push([folderKey, nameKey, snippet]);
+            }
+          });
         });
       });
-    });
+    }
 
     console.log(`\n${chalk.bgGreen(table.toString())}\n`);
   });
