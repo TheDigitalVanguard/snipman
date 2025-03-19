@@ -6,33 +6,32 @@ import inquirer from "inquirer";
 import chalk from "chalk";
 import { handleData, readData, deleteAll, saveData } from "./io.js";
 import { SnippetProps } from "./types.js";
-import { wrapText } from "./utils.js";
-
-const MAX_FOLDER_STRING_SIZE = 20;
-const MAX_NAME_STRING_SIZE = 20;
-const MAX_SNIPPET_STRING_SIZE = 60;
+import { wrapDetails } from "./utils.js";
+import {
+  FOLDER_COLUMN,
+  NAME_COLUMN,
+  SNIPMAN,
+  SNIPPET_COLUMN,
+} from "./constants.js";
 
 const program = new Command();
 const table = new Table({
   style: { border: [] },
-  head: ["Folder", "Name", "Snippet"],
+  head: [FOLDER_COLUMN, NAME_COLUMN, SNIPPET_COLUMN],
 });
 
 const pushToTable = (
   folder: string,
   name: string,
   snippet: string,
-  w: boolean
+  wrap: boolean
 ) => {
-  const wrappedFolder = w
-    ? wrapText(folder, MAX_FOLDER_STRING_SIZE).join("\n")
-    : folder;
-  const wrappedName = w
-    ? wrapText(name, MAX_NAME_STRING_SIZE).join("\n")
-    : name;
-  const wrappedSnippet = w
-    ? wrapText(snippet, MAX_SNIPPET_STRING_SIZE).join("\n")
-    : snippet;
+  const { wrappedFolder, wrappedName, wrappedSnippet } = wrapDetails(
+    folder,
+    name,
+    snippet,
+    wrap
+  );
   table.push([wrappedFolder, wrappedName, wrappedSnippet]);
 };
 
@@ -43,15 +42,7 @@ program
   .command("greet")
   .description("Print a greeting message")
   .action(() => {
-    console.log(
-      chalk.bgGreen(`
-      SSSSS   N   N  III  PPPP   M   M   A   N   N
-     S        NN  N   I   P   P  MM MM  A A  NN  N
-      SSSSS   N N N   I   PPPP   M M M AAAAA N N N
-          S   N  NN   I   P      M   M A   A N  NN
-      SSSSS   N   N  III  P      M   M A   A N   N
-    `)
-    );
+    console.log(chalk.bgGreen(SNIPMAN));
   });
 
 // Ask command

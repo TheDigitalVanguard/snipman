@@ -19,24 +19,14 @@ const inquirer_1 = __importDefault(require("inquirer"));
 const chalk_1 = __importDefault(require("chalk"));
 const io_js_1 = require("./io.js");
 const utils_js_1 = require("./utils.js");
-const MAX_FOLDER_STRING_SIZE = 20;
-const MAX_NAME_STRING_SIZE = 20;
-const MAX_SNIPPET_STRING_SIZE = 60;
+const constants_js_1 = require("./constants.js");
 const program = new commander_1.Command();
 const table = new cli_table3_1.default({
     style: { border: [] },
-    head: ["Folder", "Name", "Snippet"],
+    head: [constants_js_1.FOLDER_COLUMN, constants_js_1.NAME_COLUMN, constants_js_1.SNIPPET_COLUMN],
 });
-const pushToTable = (folder, name, snippet, w) => {
-    const wrappedFolder = w
-        ? (0, utils_js_1.wrapText)(folder, MAX_FOLDER_STRING_SIZE).join("\n")
-        : folder;
-    const wrappedName = w
-        ? (0, utils_js_1.wrapText)(name, MAX_NAME_STRING_SIZE).join("\n")
-        : name;
-    const wrappedSnippet = w
-        ? (0, utils_js_1.wrapText)(snippet, MAX_SNIPPET_STRING_SIZE).join("\n")
-        : snippet;
+const pushToTable = (folder, name, snippet, wrap) => {
+    const { wrappedFolder, wrappedName, wrappedSnippet } = (0, utils_js_1.wrapDetails)(folder, name, snippet, wrap);
     table.push([wrappedFolder, wrappedName, wrappedSnippet]);
 };
 program.version("1.0.0");
@@ -45,13 +35,7 @@ program
     .command("greet")
     .description("Print a greeting message")
     .action(() => {
-    console.log(chalk_1.default.bgGreen(`
-      SSSSS   N   N  III  PPPP   M   M   A   N   N
-     S        NN  N   I   P   P  MM MM  A A  NN  N
-      SSSSS   N N N   I   PPPP   M M M AAAAA N N N
-          S   N  NN   I   P      M   M A   A N  NN
-      SSSSS   N   N  III  P      M   M A   A N   N
-    `));
+    console.log(chalk_1.default.bgGreen(constants_js_1.SNIPMAN));
 });
 // Ask command
 program
