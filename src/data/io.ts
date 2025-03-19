@@ -2,7 +2,7 @@ import getAppDataPath from "appdata-path";
 import path from "path";
 import fs from "fs";
 import chalk from "chalk";
-import { SnippetProps } from "./types";
+import { SnippetProps } from "../types/types";
 
 const FILE_NAME = "snipman.json";
 const DATA_DIRECTORY = getAppDataPath("snipman");

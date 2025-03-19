@@ -2,7 +2,7 @@ import {
   MAX_FOLDER_STRING_SIZE,
   MAX_NAME_STRING_SIZE,
   MAX_SNIPPET_STRING_SIZE,
-} from "./constants";
+} from "../constants/constants";
 
 export const wrapText = (text: string, maxLength: number) => {
   const wrappedText = [];
