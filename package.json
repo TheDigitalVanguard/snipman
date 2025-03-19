@@ -4,7 +4,7 @@
   "main": "index.ts",
   "scripts": {
     "build": "tsc",
-    "start": "tsc dist/index.js",
+    "start": "tsc && node ./dist/index.js",
     "prepublishOnly": "tsc"
   },
   "bin": {

@@ -18,10 +18,21 @@ const table = new Table({
   head: ["Folder", "Name", "Snippet"],
 });
 
-const pushToTable = (folder: string, name: string, snippet: string) => {
-  const wrappedFolder = wrapText(folder, MAX_FOLDER_STRING_SIZE).join("\n");
-  const wrappedName = wrapText(name, MAX_NAME_STRING_SIZE).join("\n");
-  const wrappedSnippet = wrapText(snippet, MAX_SNIPPET_STRING_SIZE).join("\n");
+const pushToTable = (
+  folder: string,
+  name: string,
+  snippet: string,
+  w: boolean
+) => {
+  const wrappedFolder = w
+    ? wrapText(folder, MAX_FOLDER_STRING_SIZE).join("\n")
+    : folder;
+  const wrappedName = w
+    ? wrapText(name, MAX_NAME_STRING_SIZE).join("\n")
+    : name;
+  const wrappedSnippet = w
+    ? wrapText(snippet, MAX_SNIPPET_STRING_SIZE).join("\n")
+    : snippet;
   table.push([wrappedFolder, wrappedName, wrappedSnippet]);
 };
 
@@ -65,7 +76,8 @@ program
   .description("List all stored snippets")
   .option("-f, --folder <folder>", "Filter by folder")
   .option("-n, --name <name>", "Filter by snippet name")
-  .action(({ folder, name }) => {
+  .option("-w, --wrap", "Wrap text in all cells")
+  .action(({ folder, name, wrap }) => {
     const data = readData();
     if (!data) return console.log(chalk.bgRed("No snippets found."));
 
@@ -76,13 +88,13 @@ program
       if (name && parsed[folder][name]) {
         // Both folder and name exist, push directly
         parsed[folder][name].forEach((snippet) => {
-          pushToTable(folder, name, snippet);
+          pushToTable(folder, name, snippet, wrap);
         });
       } else {
         // Only folder exists, iterate through names in folder
         Object.entries(parsed[folder]).forEach(([nameKey, snippetArr]) => {
           snippetArr.forEach((snippet) => {
-            pushToTable(folder, nameKey, snippet);
+            pushToTable(folder, nameKey, snippet, wrap);
           });
         });
       }
@@ -92,7 +104,7 @@ program
         Object.entries(snippets).forEach(([nameKey, snippetArr]) => {
           snippetArr.forEach((snippet) => {
             if (!name || nameKey === name) {
-              pushToTable(folderKey, nameKey, snippet);
+              pushToTable(folderKey, nameKey, snippet, wrap);
             }
           });
         });
